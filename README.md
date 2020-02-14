@@ -3,9 +3,17 @@
 闇鍋がごとく思いもよらない便利機能がみつかる・・・かもしれない。  
 そんなプロジェクトです。
 
-## DEMO
+## こんなことができる
 
 `SqlConnection`の拡張メソッドに`SqlBulkCopy`をラップし、匿名型を利用して一括登録ができるようにしたサンプルです。
+
+```tsql
+CREATE TABLE [dbo].[BulkCopyWorkTable]
+(
+    [Id] INT NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(50) NULL
+)
+```
 
 ```c#
 var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
@@ -25,6 +33,13 @@ connection.BulkCopy(
     null
     );
 ```
+
+BulkCopyWorkTable
+|Id|Name|
+|:---|:---|
+|1|山田|
+|2|田中|
+|3|佐藤|
 
 同様にデータモデルを指定できるようにしたサンプルです。
 
@@ -61,3 +76,10 @@ connection.BulkCopy<BulkCopyWorkRow>(
     null
     );
 ```
+
+BulkCopyWorkTable
+|Id|Name|
+|:---|:---|
+|1|山田|
+|2|田中|
+|3|佐藤|
