@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Git\Source\Repos\YaminabeExtensions\YaminabeExtensions\YaminabeExtensions.Core\YaminabeExtensions.Core.xml</DocumentationFile>
+    <DocumentationFile>.\YaminabeExtensions.Core.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>
