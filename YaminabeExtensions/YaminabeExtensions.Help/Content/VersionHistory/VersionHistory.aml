@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="390b9e29-cbdc-4363-9d3a-11d962291c8c" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>YaminabeExtensionsドキュメントの変更履歴です。</para>
+		</introduction>
+
+		<section>
+			<title>変更履歴</title>
+			<content>
+				<para>参照する履歴を選択してください。</para>
+
+				<list class="bullet">
+					<listItem>
+						<para><link xlink:href="8bcbb0f8-161a-4a94-8495-838e85bc89ca" /></para>
+					</listItem>
+				</list>
+
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d91543f3-8705-4d8a-b7a0-1fee35dc739b" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

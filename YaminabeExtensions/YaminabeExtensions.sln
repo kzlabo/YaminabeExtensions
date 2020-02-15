@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YaminabeExtensions.Test", "YaminabeExtensions.Test\YaminabeExtensions.Test.csproj", "{4CAAC95C-6E41-4BE0-8686-43AACBAD68EB}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "YaminabeExtensions.Help", "YaminabeExtensions.Help\YaminabeExtensions.Help.shfbproj", "{BF649855-2238-40FD-A437-ABFC93923212}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YaminabeExtensions.Core", "YaminabeExtensions.Core\YaminabeExtensions.Core.csproj", "{CF8F0AE4-E556-4F69-9C73-B0043D093DF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YaminabeExtensions.Sql", "YaminabeExtensions.Sql\YaminabeExtensions.Sql.csproj", "{56C7F64D-36D3-4826-89D9-5BC223EFCD48}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "YaminabeExtensions.Db", "YaminabeExtensions.Db\YaminabeExtensions.Db.sqlproj", "{2300BE19-3FF2-408F-8004-C7A23A714451}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1CF9AC0A-A881-4031-A1FB-7AFC531FFF79}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4CAAC95C-6E41-4BE0-8686-43AACBAD68EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAAC95C-6E41-4BE0-8686-43AACBAD68EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAAC95C-6E41-4BE0-8686-43AACBAD68EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAAC95C-6E41-4BE0-8686-43AACBAD68EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF649855-2238-40FD-A437-ABFC93923212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF649855-2238-40FD-A437-ABFC93923212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF649855-2238-40FD-A437-ABFC93923212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF649855-2238-40FD-A437-ABFC93923212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF8F0AE4-E556-4F69-9C73-B0043D093DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8F0AE4-E556-4F69-9C73-B0043D093DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF8F0AE4-E556-4F69-9C73-B0043D093DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8F0AE4-E556-4F69-9C73-B0043D093DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C7F64D-36D3-4826-89D9-5BC223EFCD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C7F64D-36D3-4826-89D9-5BC223EFCD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C7F64D-36D3-4826-89D9-5BC223EFCD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C7F64D-36D3-4826-89D9-5BC223EFCD48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2300BE19-3FF2-408F-8004-C7A23A714451}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73FE5223-C5BE-4CDF-A012-F153AC1019A2}
+	EndGlobalSection
+EndGlobal

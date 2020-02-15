@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="8bcbb0f8-161a-4a94-8495-838e85bc89ca" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>Version 1.0.0.0 was released on 2020/02/15.
+			</para>
+		</introduction>
+
+		<section>
+			<title>変更履歴</title>
+			<content>
+
+				<list class="bullet">
+					<listItem>
+						<para>新規作成。</para>
+					</listItem>
+
+				</list>
+
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="390b9e29-cbdc-4363-9d3a-11d962291c8c" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>
