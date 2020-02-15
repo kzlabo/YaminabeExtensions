@@ -16,11 +16,11 @@ CREATE TABLE [dbo].[BulkCopyWorkTable]
 ```
 
 ```c#
-var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-connectionStringBuilder.DataSource = @"(localdb)\ProjectsV13";
-connectionStringBuilder.InitialCatalog = "YaminabeExtensions.Db";
+var builder = new SqlConnectionStringBuilder();
+builder.DataSource = @"(localdb)\ProjectsV13";
+builder.InitialCatalog = "YaminabeExtensions.Db";
 
-var connection = new System.Data.SqlClient.SqlConnection(connectionStringBuilder.ToString());
+var connection = new SqlConnection(builder.ToString());
 connection.BulkCopy(
     "BulkCopyWorkTable",
     new[] {
@@ -29,12 +29,12 @@ connection.BulkCopy(
         new { Id = 3, Name = "佐藤" }
         },
     true,
-    System.Data.SqlClient.SqlBulkCopyOptions.Default,
+    SqlBulkCopyOptions.Default,
     null
     );
 ```
 
-BulkCopyWorkTable
+3件のレコードが`BulkCopyWorkTable`に一括挿入されます。
 |Id|Name|
 |:---|:---|
 |1|山田|
@@ -54,30 +54,30 @@ public class BulkCopyWorkRow
 
     // 宛先テーブルに存在しない項目は除外対象としてマーク
     [BulkCopy( Ignore = true )]
-    public System.DateTime ApplyDateTime { get; set; }
+    public DateTime ApplyDateTime { get; set; }
 }
 ```
 ```c#
-var bulkCopyWorkRows = new List<BulkCopyWorkRow>();
-bulkCopyWorkRows.Add(new BulkCopyWorkRow() { Id = 1, Namae = "山田", ApplyDateTime = System.DateTime.Now });
-bulkCopyWorkRows.Add(new BulkCopyWorkRow() { Id = 2, Namae = "田中", ApplyDateTime = System.DateTime.Now });
-bulkCopyWorkRows.Add(new BulkCopyWorkRow() { Id = 3, Namae = "佐藤", ApplyDateTime = System.DateTime.Now });
+var rows = new List<BulkCopyWorkRow>();
+rows.Add(new BulkCopyWorkRow() { Id = 1, Namae = "山田", ApplyDateTime = DateTime.Now });
+rows.Add(new BulkCopyWorkRow() { Id = 2, Namae = "田中", ApplyDateTime = DateTime.Now });
+rows.Add(new BulkCopyWorkRow() { Id = 3, Namae = "佐藤", ApplyDateTime = DateTime.Now });
 
-var connectionStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-connectionStringBuilder.DataSource = @"(localdb)\ProjectsV13";
-connectionStringBuilder.InitialCatalog = "YaminabeExtensions.Db";
+var builder = new SqlConnectionStringBuilder();
+builder.DataSource = @"(localdb)\ProjectsV13";
+builder.InitialCatalog = "YaminabeExtensions.Db";
 
-var connection = new System.Data.SqlClient.SqlConnection(connectionStringBuilder.ToString());
+var connection = new SqlConnection(builder.ToString());
 connection.BulkCopy<BulkCopyWorkRow>(
     "BulkCopyWorkTable",
     bulkCopyWorkRows,
     true,
-    System.Data.SqlClient.SqlBulkCopyOptions.Default,
+    SqlBulkCopyOptions.Default,
     null
     );
 ```
 
-BulkCopyWorkTable
+3件のレコードが`BulkCopyWorkTable`に一括挿入されます。
 |Id|Name|
 |:---|:---|
 |1|山田|
