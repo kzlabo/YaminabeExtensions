@@ -70,7 +70,7 @@ builder.InitialCatalog = "YaminabeExtensions.Db";
 var connection = new SqlConnection(builder.ToString());
 connection.BulkCopy<BulkCopyWorkRow>(
     "BulkCopyWorkTable",
-    bulkCopyWorkRows,
+    rows,
     true,
     SqlBulkCopyOptions.Default,
     null
