@@ -28,6 +28,7 @@ namespace YaminabeExtensions.Sql
     /// <revisionHistory>
     ///     <revision date="2020/02/11" version="1.0.0.0" author="kzlabo">新規作成。</revision>
     ///     <revision date="2020/05/24" version="1.0.1.0" author="kzlabo">トランザクション漏れ修正。</revision>
+    ///     <revision date="2020/05/24" version="1.0.2.0" author="kzlabo">データ有無判定の修正。</revision>
     /// </revisionHistory>
     public static class SqlConnectionExtensions
     {
@@ -253,7 +254,7 @@ namespace YaminabeExtensions.Sql
             )
         {
             // 一括登録データがない場合は処理無効
-            if (data == null || data.First() == null)
+            if (data == null || data.Count() == 0 || data.First() == null)
             {
                 return;
             }
@@ -366,7 +367,7 @@ namespace YaminabeExtensions.Sql
             )
         {
             // 一括登録データがない場合は処理無効
-            if (data == null || data.First() == null)
+            if (data == null || data.Count() == 0 || data.First() == null)
             {
                 return;
             }
