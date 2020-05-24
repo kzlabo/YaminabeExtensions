@@ -52,6 +52,13 @@ namespace YaminabeExtensions.Test.Tests.Sql
         /// </summary>
         private class BulkCopyMapTestRow
         {
+            public enum EnumValueOption
+            {
+                Zero = 0,
+                First = 1,
+                Second = 2
+            }
+
             public int Id { get; set; }
 
             public string StringValue { get; set; }
@@ -93,6 +100,8 @@ namespace YaminabeExtensions.Test.Tests.Sql
             public Guid GuidValue { get; set; }
 
             public Guid? GuidWithNullable { get; set; }
+
+            public EnumValueOption EnumValue { get; set; }
         }
 
         #endregion
@@ -267,8 +276,8 @@ FROM [BulkCopyWorkTable] AS [A]
         public void BulkCopyMapSuccessTest()
         {
             var rows = new List<BulkCopyMapTestRow>();
-            rows.Add(new BulkCopyMapTestRow() { Id = 1, StringValue = "a", ShortValue = 1, ShortWithNullable = 1, IntValue = 1, IntWithNullable = 1, LongValue = 1L, LongWithNullable = 1L, FloatValue = 1.0F, FloatWithNullable = 1.0F, DoubleValue = 1.0D, DoubleWithNullable = 1.0D, DecimalValue = 1.0M, DecimalWithNullable = 1.0M, DateTimeValue = DateTime.Parse("2000/01/02"), DateWithNullable = DateTime.Parse("2000/01/02"), ByteValues = new byte[] { 0xff, 0xff }, BoolValue = true, BoolWithNullable = true, GuidValue = Guid.Parse("00000000-0000-0000-0000-000000000000"), GuidWithNullable = Guid.Parse("00000000-0000-0000-0000-000000000000") });
-            rows.Add(new BulkCopyMapTestRow() { Id = 2, StringValue = "a", ShortValue = 1, ShortWithNullable = null, IntValue = 1, IntWithNullable = null, LongValue = 1L, LongWithNullable = null, FloatValue = 1.0F, FloatWithNullable = null, DoubleValue = 1.0D, DoubleWithNullable = null, DecimalValue = 1.0M, DecimalWithNullable = null, DateTimeValue = DateTime.Parse("2000/01/02"), DateWithNullable = null, ByteValues = new byte[] { 0xff, 0xff }, BoolValue = true, BoolWithNullable = null, GuidValue = Guid.Parse("00000000-0000-0000-0000-000000000000"), GuidWithNullable = null });
+            rows.Add(new BulkCopyMapTestRow() { Id = 1, StringValue = "a", ShortValue = 1, ShortWithNullable = 1, IntValue = 1, IntWithNullable = 1, LongValue = 1L, LongWithNullable = 1L, FloatValue = 1.0F, FloatWithNullable = 1.0F, DoubleValue = 1.0D, DoubleWithNullable = 1.0D, DecimalValue = 1.0M, DecimalWithNullable = 1.0M, DateTimeValue = DateTime.Parse("2000/01/02"), DateWithNullable = DateTime.Parse("2000/01/02"), ByteValues = new byte[] { 0xff, 0xff }, BoolValue = true, BoolWithNullable = true, GuidValue = Guid.Parse("00000000-0000-0000-0000-000000000000"), GuidWithNullable = Guid.Parse("00000000-0000-0000-0000-000000000000"), EnumValue = BulkCopyMapTestRow.EnumValueOption.First });
+            rows.Add(new BulkCopyMapTestRow() { Id = 2, StringValue = "a", ShortValue = 1, ShortWithNullable = null, IntValue = 1, IntWithNullable = null, LongValue = 1L, LongWithNullable = null, FloatValue = 1.0F, FloatWithNullable = null, DoubleValue = 1.0D, DoubleWithNullable = null, DecimalValue = 1.0M, DecimalWithNullable = null, DateTimeValue = DateTime.Parse("2000/01/02"), DateWithNullable = null, ByteValues = new byte[] { 0xff, 0xff }, BoolValue = true, BoolWithNullable = null, GuidValue = Guid.Parse("00000000-0000-0000-0000-000000000000"), GuidWithNullable = null, EnumValue = BulkCopyMapTestRow.EnumValueOption.First });
 
             var builder = new SqlConnectionStringBuilder();
             builder.DataSource = @"(localdb)\ProjectsV13";

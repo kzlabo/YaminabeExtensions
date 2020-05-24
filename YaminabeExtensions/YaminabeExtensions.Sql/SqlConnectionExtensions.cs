@@ -29,6 +29,7 @@ namespace YaminabeExtensions.Sql
     ///     <revision date="2020/02/11" version="1.0.0.0" author="kzlabo">新規作成。</revision>
     ///     <revision date="2020/05/24" version="1.0.1.0" author="kzlabo">トランザクション漏れ修正。</revision>
     ///     <revision date="2020/05/24" version="1.0.2.0" author="kzlabo">データ有無判定の修正。</revision>
+    ///     <revision date="2020/05/24" version="1.0.3.0" author="kzlabo">列挙型に対応。</revision>
     /// </revisionHistory>
     public static class SqlConnectionExtensions
     {
@@ -140,11 +141,17 @@ namespace YaminabeExtensions.Sql
             var columns = new List<string>();
             foreach (var property in properties.Where(p => isTarget(p) == true))
             {
-                if (_sqlServerTypeMap.ContainsKey(property.PropertyType) == false)
+                var mapType = property.PropertyType;
+                if (property.PropertyType.IsEnum == true)
+                {
+                    mapType = typeof(int);
+                }
+
+                if (_sqlServerTypeMap.ContainsKey(mapType) == false)
                 {
                     throw new NotImplementedException($"{property.PropertyType.FullName} は未定義のデータ型です。");
                 }
-                columns.Add($"[{getColumnName(property)}] {_sqlServerTypeMap[property.PropertyType]}");
+                columns.Add($"[{getColumnName(property)}] {_sqlServerTypeMap[mapType]}");
             }
 
             // テーブル作成

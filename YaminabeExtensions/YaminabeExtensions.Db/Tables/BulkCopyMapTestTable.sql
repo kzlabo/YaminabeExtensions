@@ -20,5 +20,6 @@
     [BoolValue] BIT NOT NULL, 
     [BoolWithNullable ] BIT NULL, 
     [GuidValue] UNIQUEIDENTIFIER NOT NULL, 
-    [GuidWithNullable] UNIQUEIDENTIFIER NULL
+    [GuidWithNullable] UNIQUEIDENTIFIER NULL,
+    [EnumValue] INT
 )
