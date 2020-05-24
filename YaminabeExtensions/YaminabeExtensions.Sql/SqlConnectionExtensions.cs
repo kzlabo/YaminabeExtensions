@@ -27,6 +27,7 @@ namespace YaminabeExtensions.Sql
     /// </summary>
     /// <revisionHistory>
     ///     <revision date="2020/02/11" version="1.0.0.0" author="kzlabo">新規作成。</revision>
+    ///     <revision date="2020/05/24" version="1.0.1.0" author="kzlabo">トランザクション漏れ修正。</revision>
     /// </revisionHistory>
     public static class SqlConnectionExtensions
     {
@@ -267,7 +268,7 @@ namespace YaminabeExtensions.Sql
 
             // マッピング用テーブル作成
             var table = new DataTable();
-            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection))
+            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection, externalTransaction))
             {
                 table.Load(command.ExecuteReader());
             }
@@ -380,7 +381,7 @@ namespace YaminabeExtensions.Sql
 
             // マッピング用テーブル作成
             var table = new DataTable();
-            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection))
+            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection, externalTransaction))
             {
                 table.Load(command.ExecuteReader());
             }
