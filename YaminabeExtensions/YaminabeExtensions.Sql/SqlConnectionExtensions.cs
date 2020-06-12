@@ -30,6 +30,7 @@ namespace YaminabeExtensions.Sql
     ///     <revision date="2020/05/24" version="1.0.1.0" author="kzlabo">トランザクション漏れ修正。</revision>
     ///     <revision date="2020/05/24" version="1.0.2.0" author="kzlabo">データ有無判定の修正。</revision>
     ///     <revision date="2020/05/24" version="1.0.3.0" author="kzlabo">列挙型に対応。</revision>
+    ///     <revision date="2020/06/11" version="1.0.4.0" author="kzlabo">メモリ効率化の為に、一括登録をIDataReaderに対応。</revision>
     /// </revisionHistory>
     public static class SqlConnectionExtensions
     {
@@ -171,6 +172,21 @@ namespace YaminabeExtensions.Sql
         #region -------------------- BulkCopy --------------------
 
         /// <summary>
+        /// <see cref="BulkCopyDataReader{TModel}"/> として取得します。
+        /// </summary>
+        /// <typeparam name="TModel">モデルの型。</typeparam>
+        /// <param name="models">モデルリスト。</param>
+        /// <returns>
+        /// <see cref="BulkCopyDataReader{TModel}"/> を返却します。
+        /// </returns>
+        public static BulkCopyDataReader<TModel> AsDBulkCopyDataReader<TModel>(
+            this IEnumerable<TModel> models
+            )
+        {
+            return new BulkCopyDataReader<TModel>(models);
+        }
+
+        /// <summary>
         /// 宛先テーブルに対して一括でデータ登録を行います。
         /// </summary>
         /// <param name="connection">コネクション。</param>
@@ -201,6 +217,43 @@ namespace YaminabeExtensions.Sql
                 // 一括登録実行
                 sqlBulkCopy.DestinationTableName = destinationTableName;
                 sqlBulkCopy.WriteToServer(table);
+            }
+        }
+
+        /// <summary>
+        /// 宛先テーブルに対して一括でデータ登録を行います。
+        /// </summary>
+        /// <typeparam name="T">モデルの型。</typeparam>
+        /// <param name="connection">コネクション。</param>
+        /// <param name="destinationTableName">宛先テーブル名。</param>
+        /// <param name="dataReader">データリーダ。</param>
+        /// <param name="truncate">宛先テーブルのデータ削有無。 <c>true</c> の場合は登録前に削除を行う。</param>
+        /// <param name="copyOptions">コピーオプション。</param>
+        /// <param name="externalTransaction">トランザクション。</param>
+        public static void BulkCopy<T>(
+            this SqlConnection connection,
+            string destinationTableName,
+            BulkCopyDataReader<T> dataReader,
+            bool truncate,
+            SqlBulkCopyOptions copyOptions,
+            SqlTransaction externalTransaction
+            )
+        {
+            using (var sqlBulkCopy = new SqlBulkCopy(connection, copyOptions, externalTransaction))
+            {
+                // 一括登録前にデータを削除
+                if (truncate)
+                {
+                    using (var truncateCommand = new SqlCommand($"TRUNCATE TABLE [{destinationTableName}]", connection, externalTransaction))
+                    {
+                        truncateCommand.ExecuteNonQuery();
+                    }
+                }
+                // マッピング
+                dataReader.SetColumnMappings(sqlBulkCopy.ColumnMappings);
+                // 一括登録実行
+                sqlBulkCopy.DestinationTableName = destinationTableName;
+                sqlBulkCopy.WriteToServer(dataReader);
             }
         }
 
@@ -274,55 +327,10 @@ namespace YaminabeExtensions.Sql
                 connectionState = ConnectionState.Closed;
             }
 
-            // マッピング用テーブル作成
-            var table = new DataTable();
-            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection, externalTransaction))
-            {
-                table.Load(command.ExecuteReader());
-            }
-
-            // 一括登録対象プロパティ判定メソッド
-            bool isTarget(System.Reflection.PropertyInfo property)
-            {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(BulkCopyAttribute)) as BulkCopyAttribute;
-                // 属性指定されていない場合は対象
-                if (attribute == null)
-                {
-                    return true;
-                }
-                // 除外指定されている場合は対象としない
-                if (attribute.Ignore == true)
-                {
-                    return false;
-                }
-                return true;
-            }
-
-            // 一括登録対象プロパティの宛先項目名取得メソッド
-            string getColumnName(System.Reflection.PropertyInfo property)
-            {
-                // 属性指定されていない場合はプロパティ名
-                // カラム名指定がされている場合は指定名
-                var attribute = Attribute.GetCustomAttribute(property, typeof(BulkCopyAttribute)) as BulkCopyAttribute;
-                return attribute?.ColumnName ?? property.Name;
-            }
-
-            // データテーブルにデータ列挙を登録
-            var properties = (typeof(T).GetProperties() as System.Reflection.PropertyInfo[]).Where(prop => isTarget(prop) == true);
-            foreach (var row in data)
-            {
-                var newRow = table.NewRow();
-                foreach (var propery in properties)
-                {
-                    newRow[getColumnName(propery)] = propery.GetValue(row) ?? DBNull.Value;
-                }
-                table.Rows.Add(newRow);
-            }
-
             // 一括登録実行
-            connection.BulkCopy(
+            connection.BulkCopy<T>(
                 destinationTableName,
-                table,
+                data.AsDBulkCopyDataReader<T>(),
                 truncate,
                 copyOptions,
                 externalTransaction
@@ -387,29 +395,10 @@ namespace YaminabeExtensions.Sql
                 connectionState = ConnectionState.Closed;
             }
 
-            // マッピング用テーブル作成
-            var table = new DataTable();
-            using (var command = new SqlCommand($"SELECT TOP 0 * FROM [{destinationTableName}]", connection, externalTransaction))
-            {
-                table.Load(command.ExecuteReader());
-            }
-
-            // データテーブルにデータ列挙を登録
-            var properties = data.First().GetType().GetProperties() as System.Reflection.PropertyInfo[];
-            foreach(var row in data)
-            {
-                var newRow = table.NewRow();
-                foreach (var propery in properties)
-                {
-                    newRow[propery.Name] = propery.GetValue(row) ?? DBNull.Value;
-                }
-                table.Rows.Add(newRow);
-            }
-
             // 一括登録実行
-            connection.BulkCopy(
+            connection.BulkCopy<dynamic>(
                 destinationTableName,
-                table,
+                data.AsDBulkCopyDataReader<dynamic>(),
                 truncate,
                 copyOptions,
                 externalTransaction
