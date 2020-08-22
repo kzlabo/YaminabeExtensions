@@ -5,11 +5,12 @@
     <Version>0.0.8</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Authors>kzlabo</Authors>
-    <Copyright>Copyright 2020 kzlabo</Copyright>
+    <Authors>kzlabo.dev</Authors>
+    <Copyright>Copyright 2020 kzlabo.dev</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kzlabo/YaminabeExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kzlabo/YaminabeExtensions</RepositoryUrl>
+    <Company>kzlabo.dev</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

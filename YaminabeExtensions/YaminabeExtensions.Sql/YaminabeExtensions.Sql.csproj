@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>kzlabo.dev</Authors>
+    <Copyright>Copyright 2020 kzlabo.dev</Copyright>
+    <Company>kzlabo.dev</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kzlabo/YaminabeExtensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kzlabo/YaminabeExtensions</RepositoryUrl>
+    <PackageTags>sql bulkcopy</PackageTags>
+    <PackageIcon></PackageIcon>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>BulkCopy等のSQLServerの連携強化用の拡張メソッドを提供します。</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
