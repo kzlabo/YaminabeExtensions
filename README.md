@@ -3,10 +3,10 @@
 闇鍋がごとく思いもよらない便利機能がみつかる・・・かもしれない。  
 そんなプロジェクトです。
 
-|Package|Nuget|Note|
-|:---|:---|:---|
-|[YaminabeExtensions.Core](https://www.nuget.org/packages/YaminabeExtensions.Core/)|[![YaminabeExtensions.Core](https://img.shields.io/nuget/v/YaminabeExtensions.Core.svg)](https://www.nuget.org/packages/YaminabeExtensions.Core/)||
-|[YaminabeExtensions.Sql](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|[![YaminabeExtensions.Sql](https://img.shields.io/nuget/v/YaminabeExtensions.Sql.svg)](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|BulkCopy等のSQLServer連携機能を拡張。|
+|Package|License|Nuget|Note|
+|:---|:---|:---|:---|
+|[YaminabeExtensions.Core](https://www.nuget.org/packages/YaminabeExtensions.Core/)|[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/kzlabo/YaminabeExtensions/blob/master/LICENSE)|[![YaminabeExtensions.Core](https://img.shields.io/nuget/v/YaminabeExtensions.Core.svg)](https://www.nuget.org/packages/YaminabeExtensions.Core/)||
+|[YaminabeExtensions.Sql](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/kzlabo/YaminabeExtensions/blob/master/LICENSE)|[![YaminabeExtensions.Sql](https://img.shields.io/nuget/v/YaminabeExtensions.Sql.svg)](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|BulkCopy等のSQLServer連携機能を拡張。|
 
 ## こんなことができる
 
