@@ -3,6 +3,11 @@
 闇鍋がごとく思いもよらない便利機能がみつかる・・・かもしれない。  
 そんなプロジェクトです。
 
+|Package|Nuget|Note|
+|:---|:---|:---|
+|[YaminabeExtensions.Core](https://www.nuget.org/packages/YaminabeExtensions.Core/)|[![YaminabeExtensions.Core](https://img.shields.io/nuget/v/YaminabeExtensions.Core.svg)](https://www.nuget.org/packages/YaminabeExtensions.Core/)||
+|[YaminabeExtensions.Sql](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|[![YaminabeExtensions.Sql](https://img.shields.io/nuget/v/YaminabeExtensions.Sql.svg)](https://www.nuget.org/packages/YaminabeExtensions.Sql/)|BulkCopy等のSQLServer連携機能を拡張。|
+
 ## こんなことができる
 
 `SqlConnection`の拡張メソッドに`SqlBulkCopy`をラップし、匿名型を利用して一括登録ができるようにしたサンプルです。
