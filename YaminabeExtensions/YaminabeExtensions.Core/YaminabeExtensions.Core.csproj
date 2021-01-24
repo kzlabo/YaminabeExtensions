@@ -11,6 +11,8 @@
     <PackageProjectUrl>https://github.com/kzlabo/YaminabeExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kzlabo/YaminabeExtensions</RepositoryUrl>
     <Company>kzlabo.dev</Company>
+    <PackageReleaseNotes>機能追加
+・固定長文字列およびデータモデルの相互変換機能を追加。</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
