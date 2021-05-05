@@ -64,6 +64,7 @@
   <ItemGroup>
     <Build Include="Tables\BulkCopyWorkTable.sql" />
     <Build Include="Tables\BulkCopyMapTestTable.sql" />
+    <Build Include="Tables\BulkSqlWorkTable.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="YaminabeExtensions.Db.publish.xml" />

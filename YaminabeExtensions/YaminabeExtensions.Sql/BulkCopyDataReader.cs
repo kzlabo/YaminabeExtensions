@@ -30,6 +30,7 @@ namespace YaminabeExtensions.Sql
     /// <seealso cref="System.Data.IDataReader" />
     /// <revisionHistory>
     ///     <revision date="2020/06/11" version="1.0.0.0" author="kzlabo">新規作成。</revision>
+    ///     <revision date="2021/05/05" version="1.1.0.0" author="kzlabo">更新・削除処理の為のプロパティ・メソッドを追加。</revision>
     /// </revisionHistory>
     public class BulkCopyDataReader<TModel> : IDataReader
     {
@@ -44,6 +45,11 @@ namespace YaminabeExtensions.Sql
         /// プロパティリストを取得します。
         /// </summary>
         private List<PropertyInfo> Properties { get; }
+
+        /// <summary>
+        /// 主キープロパティリストを取得します。
+        /// </summary>
+        private List<PropertyInfo> PrimaryKeyProperties { get; }
 
         /// <summary>
         /// 項目数を取得します。
@@ -120,11 +126,17 @@ namespace YaminabeExtensions.Sql
         {
             this.Models = models.GetEnumerator();
             this.Properties = new List<PropertyInfo>();
+            this.PrimaryKeyProperties = new List<PropertyInfo>();
+            // 一括登録対象プロパティ取得
             foreach (var property in typeof(TModel).GetProperties().Where(property => IsTarget(property)))
             {
                 this.Properties.Add(property);
             }
-
+            // 主キー対象プロパティ取得
+            foreach (var property in typeof(TModel).GetProperties().Where(property => IsPrimary(property)))
+            {
+                this.PrimaryKeyProperties.Add(property);
+            }
         }
 
         #endregion
@@ -155,6 +167,39 @@ namespace YaminabeExtensions.Sql
         }
 
         /// <summary>
+        /// 主キープロパティ判定メソッド。
+        /// </summary>
+        /// <param name="property">プロパティ。</param>
+        /// <returns>
+        /// 主キー対象プロパティの場合は <c>true</c> 。 主キー対象プロパティではない場合は <c>false</c> 。
+        /// </returns>
+        private bool IsPrimary(PropertyInfo property)
+        {
+            var attribute = Attribute.GetCustomAttribute(property, typeof(BulkCopyAttribute)) as BulkCopyAttribute;
+            // 属性指定されていない場合
+            // かつ
+            // プロパティ名の末尾が主キー対象名ではない場合
+            // は主キーと判定しない
+            if(attribute == null)
+            {
+                if (property.Name.EndsWith("_ExPK"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            // 除外指定されている場合は主キーと判定しない
+            if (attribute.Ignore == true)
+            {
+                return false;
+            }
+            return attribute.PrimaryKey;
+        }
+
+        /// <summary>
         /// 一括登録対象プロパティの宛先項目名を取得します。
         /// </summary>
         /// <param name="property">プロパティ。</param>
@@ -163,10 +208,11 @@ namespace YaminabeExtensions.Sql
         /// </returns>
         private string GetColumnName(PropertyInfo property)
         {
-            // 属性指定されていない場合はプロパティ名
+            // 属性指定されていない場合はプロパティ名（主キー判別用のマーカー名部を除く）
+            //   例）Id_ExPK ⇒ ID として取得
             // カラム名指定がされている場合は指定名
             var attribute = Attribute.GetCustomAttribute(property, typeof(BulkCopyAttribute)) as BulkCopyAttribute;
-            return attribute?.ColumnName ?? property.Name;
+            return attribute?.ColumnName ?? property.Name.Replace("_ExPK", string.Empty);
         }
 
         /// <summary>
@@ -265,6 +311,56 @@ namespace YaminabeExtensions.Sql
             foreach (var property in this.Properties)
             {
                 columnMappings.Add(property.Name, GetColumnName(property));
+            }
+        }
+
+        /// <summary>
+        /// モデルの対象プロパティを取得します。
+        /// </summary>
+        /// <returns>
+        /// 対象プロパティを順次返却します。
+        /// </returns>
+        public IEnumerable<string> GetColumns()
+        {
+            foreach (var property in this.Properties)
+            {
+                yield return GetColumnName(property);
+            }
+        }
+
+        /// <summary>
+        /// モデルの主キー対象プロパティを取得します。
+        /// </summary>
+        /// <returns>
+        /// 主キー対象プロパティを順次返却します。
+        /// </returns>
+        /// <remarks>
+        /// 主キー対象プロパティが設定されていない場合はすべてのプロパティをキーとして取得します。
+        /// </remarks>
+        public IEnumerable<string> GetPrimaryColumns()
+        {
+            foreach (var property in this.PrimaryKeyProperties.Count > 0 ? this.PrimaryKeyProperties : this.Properties)
+            {
+                yield return GetColumnName(property);
+            }
+        }
+
+        /// <summary>
+        /// モデルの更新対象プロパティを取得します。
+        /// </summary>
+        /// <returns>
+        /// 主キー対象プロパティを除いたプロパティを順次返却します。
+        /// </returns>
+        public IEnumerable<string> GetUpdateColumns()
+        {
+            foreach (var property in this.Properties)
+            {
+                // 主キーに存在するプロパティは対象外
+                if (this.PrimaryKeyProperties.Contains(property))
+                {
+                    continue;
+                }
+                yield return GetColumnName(property);
             }
         }
 

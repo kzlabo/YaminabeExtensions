@@ -24,6 +24,7 @@ namespace YaminabeExtensions.Sql
     /// <seealso cref="System.Attribute" />
     /// <revisionHistory>
     ///     <revision date="2020/02/11" version="1.0.0.0" author="kzlabo">新規作成。</revision>
+    ///     <revision date="2021/05/05" version="1.1.0.0" author="kzlabo">更新・削除処理の為の主キー判定を追加。</revision>
     /// </revisionHistory>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class BulkCopyAttribute : Attribute
@@ -40,5 +41,13 @@ namespace YaminabeExtensions.Sql
         /// プロパティ名とカラム名が一致しない場合に、カラム名を指定します。
         /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// プロパティが主キーであるかどうかを指定します。
+        /// </summary>
+        /// <value>
+        ///   主キーとする場合は <c>true</c>。 主キーではない場合は <c>false</c> を指定します。
+        /// </value>
+        public bool PrimaryKey { get; set; } = false;
     }
 }

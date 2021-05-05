@@ -104,6 +104,22 @@ namespace YaminabeExtensions.Test.Tests.Sql
             public EnumValueOption EnumValue { get; set; }
         }
 
+        /// <summary>
+        /// Bulk系拡張メソッドのデータモデルクラスを検証するためのスタブクラス。
+        /// </summary>
+        private class BulkSqlWorkRow
+        {
+            [BulkCopy(PrimaryKey = true)]
+            public int Id { get; set; }
+
+            [BulkCopy(PrimaryKey = true)]
+            public int SubId { get; set; }
+
+            public string Name { get; set; }
+
+            public int? Age { get; set; }
+        }
+
         #endregion
 
         #region -------------------- test method --------------------
@@ -111,8 +127,11 @@ namespace YaminabeExtensions.Test.Tests.Sql
         #region -------------------- BulkCopy --------------------
 
         /// <summary>
-        /// <see cref="SqlConnectionExtensions.BulkCopy(SqlConnection, string, IEnumerable{dynamic}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
+        /// <see cref="SqlConnectionExtensions.BulkCopy{T}(SqlConnection, string, IEnumerable{T}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
         /// </summary>
+        /// <remarks>
+        /// 匿名型パターン。
+        /// </remarks>
         [TestCategory("SqlConnection:BulkCopy")]
         [TestMethod]
         public void BulkCopyDynamicSuccessTest()
@@ -138,6 +157,9 @@ namespace YaminabeExtensions.Test.Tests.Sql
         /// <summary>
         /// <see cref="SqlConnectionExtensions.BulkCopy{T}(SqlConnection, string, IEnumerable{T}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
         /// </summary>
+        /// <remarks>
+        /// モデルパターン。
+        /// </remarks>
         [TestCategory("SqlConnection:BulkCopy")]
         [TestMethod]
         public void BulkCopyGenericSuccessTest()
@@ -162,8 +184,11 @@ namespace YaminabeExtensions.Test.Tests.Sql
         }
 
         /// <summary>
-        /// <see cref="SqlConnectionExtensions.BulkCopyToTemporaryTable(SqlConnection, string, IEnumerable{dynamic}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
+        /// <see cref="SqlConnectionExtensions.BulkCopyToTemporaryTable{T}(SqlConnection, string, IEnumerable{T}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
         /// </summary>
+        /// <remarks>
+        /// 匿名型パターン。
+        /// </remarks>
         [TestCategory("SqlConnection:BulkCopy")]
         [TestMethod]
         public void BulkCopyToTemporaryTableDynamicSuccessTest()
@@ -218,6 +243,9 @@ FROM [BulkCopyWorkTable] AS [A]
         /// <summary>
         /// <see cref="SqlConnectionExtensions.BulkCopyToTemporaryTable{T}(SqlConnection, string, IEnumerable{T}, bool, SqlBulkCopyOptions, SqlTransaction)"/> の正常系検証を実施します。
         /// </summary>
+        /// <remarks>
+        /// モデルパターン。
+        /// </remarks>
         [TestCategory("SqlConnection:BulkCopy")]
         [TestMethod]
         public void BulkCopyToTemporaryTableGenericSuccessTest()
@@ -300,6 +328,358 @@ FROM [BulkCopyWorkTable] AS [A]
                 true,
                 SqlBulkCopyOptions.Default,
                 null
+                );
+        }
+
+        #endregion
+
+        #region -------------------- BulkDelete --------------------
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkDelete{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// 匿名型に主キーマーカーを指定しないパターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkDelete")]
+        [TestMethod]
+        public void BulkDeleteDynamic1SuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括削除
+            connection.BulkDelete(
+                "BulkSqlWorkTable", 
+                new[] { 
+                    new { Id = 1, SubId = 1 }, 
+                    new { Id = 2, SubId = 1 }, 
+                    new { Id = 3, SubId = 3 } 
+                    }, 
+                null
+                );
+        }
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkDelete{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// 匿名型に主キーマーカーを指定するパターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkDelete")]
+        [TestMethod]
+        public void BulkDeleteDynamic2SuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括削除
+            connection.BulkDelete(
+                "BulkSqlWorkTable",
+                new[] {
+                    new { Id_ExPK = 1, SubId_ExPK = 1, Name = "山田", Age = null as int? },
+                    new { Id_ExPK = 2, SubId_ExPK = 1, Name = "田中", Age = 16 as int? },
+                    new { Id_ExPK = 3, SubId_ExPK = 3, Name = "佐藤", Age = 20 as int? }
+                    },
+                null
+                );
+        }
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkDelete{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// モデルパターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkDelete")]
+        [TestMethod]
+        public void BulkDeleteGenericSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括削除データ作成
+            var rows = new List<BulkSqlWorkRow>();
+            rows.Add(new BulkSqlWorkRow() { Id = 1, SubId = 1, Name = "山田", Age = null });
+            rows.Add(new BulkSqlWorkRow() { Id = 2, SubId = 1, Name = "田中", Age = 16 });
+            rows.Add(new BulkSqlWorkRow() { Id = 3, SubId = 3, Name = "佐藤", Age = 20 });
+
+            // 一括削除
+            connection.BulkDelete<BulkSqlWorkRow>("BulkSqlWorkTable", rows, null);
+        }
+
+        #endregion
+
+        #region -------------------- BulkUpdate --------------------
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkUpdate{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// 匿名型パターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkUpdate")]
+        [TestMethod]
+        public void BulkUpdateDynamicSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括更新
+            connection.BulkUpdate(
+                "BulkSqlWorkTable",
+                new[] {
+                    new { Id_ExPK = 1, SubId_ExPK = 1, Name = "山田更新", Age = 100 as int? },
+                    new { Id_ExPK = 2, SubId_ExPK = 1, Name = "田中更新", Age = null as int? },
+                    new { Id_ExPK = 3, SubId_ExPK = 3, Name = "佐藤更新", Age = null as int? }
+                    },
+                null
+                );
+        }
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkUpdate{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// モデルパターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkUpdate")]
+        [TestMethod]
+        public void BulkUpdateGenericSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括更新データ作成
+            var rows = new List<BulkSqlWorkRow>();
+            rows.Add(new BulkSqlWorkRow() { Id = 1, SubId = 1, Name = "山田更新", Age = 100 });
+            rows.Add(new BulkSqlWorkRow() { Id = 2, SubId = 1, Name = "田中更新", Age = null });
+            rows.Add(new BulkSqlWorkRow() { Id = 3, SubId = 3, Name = "佐藤更新", Age = null });
+
+            // 一括削除
+            connection.BulkUpdate<BulkSqlWorkRow>(
+                "BulkSqlWorkTable", 
+                rows, 
+                null
+                );
+        }
+
+        #endregion
+
+        #region -------------------- BulkMerge --------------------
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkMerge{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction, bool)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// 匿名型パターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkMerge")]
+        [TestMethod]
+        public void BulkMergeDynamicSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括更新
+            connection.BulkMerge(
+                "BulkSqlWorkTable",
+                new[] {
+                    new { Id_ExPK = 1, SubId_ExPK = 1, Name = "山田更新", Age = 100 as int? },
+                    new { Id_ExPK = 2, SubId_ExPK = 1, Name = "田中更新", Age = null as int? },
+                    new { Id_ExPK = 3, SubId_ExPK = 3, Name = "佐藤更新", Age = null as int? }
+                    },
+                null,
+                true
+                );
+        }
+
+        /// <summary>
+        /// <see cref="SqlConnectionExtensions.BulkMerge{T}(SqlConnection, string, IEnumerable{T}, SqlTransaction, bool)"/> の正常系検証を実施します。
+        /// </summary>
+        /// <remarks>
+        /// モデルパターン。
+        /// </remarks>
+        [TestCategory("SqlConnection:BulkMerge")]
+        [TestMethod]
+        public void BulkMergeGenericSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括更新データ作成
+            var rows = new List<BulkSqlWorkRow>();
+            rows.Add(new BulkSqlWorkRow() { Id = 1, SubId = 1, Name = "山田更新", Age = 100 });
+            rows.Add(new BulkSqlWorkRow() { Id = 2, SubId = 1, Name = "田中更新", Age = null });
+            rows.Add(new BulkSqlWorkRow() { Id = 3, SubId = 3, Name = "佐藤更新", Age = null });
+
+            // 一括削除
+            connection.BulkMerge<BulkSqlWorkRow>(
+                "BulkSqlWorkTable",
+                rows,
+                null,
+                true
+                );
+        }
+
+        /// <summary>
+        /// アンマッチ時の宛先テーブルのデータ削除機能の無効化の検証を実施します。
+        /// </summary>
+        [TestCategory("SqlConnection:BulkMerge")]
+        [TestMethod]
+        public void BulkMergeNotMatchedNoDeleteSuccessTest()
+        {
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = @"(localdb)\ProjectsV13";
+            builder.InitialCatalog = "YaminabeExtensions.Db";
+
+            using var connection = new SqlConnection(builder.ToString());
+            using var command = new SqlCommand(string.Empty, connection);
+            connection.Open();
+
+            // 宛先テーブルに更新対象データセット
+            var initialSql = @"
+TRUNCATE TABLE [BulkSqlWorkTable];
+INSERT INTO [BulkSqlWorkTable]
+VALUES
+(1, 1, '山田', NULL),
+(2, 1, '田中', 16),
+(3, 1, '佐藤', 20)
+";
+            command.CommandText = initialSql;
+            command.ExecuteNonQuery();
+
+            // 一括更新データ作成
+            var rows = new List<BulkSqlWorkRow>();
+            rows.Add(new BulkSqlWorkRow() { Id = 1, SubId = 1, Name = "山田更新", Age = 100 });
+            rows.Add(new BulkSqlWorkRow() { Id = 2, SubId = 1, Name = "田中更新", Age = null });
+            rows.Add(new BulkSqlWorkRow() { Id = 3, SubId = 3, Name = "佐藤更新", Age = null });
+
+            // 一括削除
+            connection.BulkMerge<BulkSqlWorkRow>(
+                "BulkSqlWorkTable",
+                rows,
+                null,
+                false
                 );
         }
 
